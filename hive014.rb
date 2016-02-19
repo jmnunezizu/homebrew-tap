@@ -5,12 +5,11 @@ class Hive014 < Formula
   sha256 "7db1d3187f8bde20adbb59c37f536339d2548b39d9974508bd3a813e48d7b61c"
 
   depends_on "hadoop"
-  depends_on :java
+  conflicts_with 'apache-spark', :because => 'both install `beeline` binaries'
 
   def install
     rm_f Dir["bin/*.bat"]
-    libexec.install %w[bin conf examples lib ]
-    libexec.install Dir["*.jar"]
+    libexec.install %w[bin conf examples hcatalog lib scripts]
     bin.write_exec_script Dir["#{libexec}/bin/*"]
   end
 
@@ -18,6 +17,8 @@ class Hive014 < Formula
     Hadoop must be in your path for hive executable to work.
     After installation, set $HIVE_HOME in your profile:
       export HIVE_HOME=#{libexec}
+    If you want to use HCatalog with Pig, set $HCAT_HOME in your profile:
+      export HCAT_HOME=#{libexec}/hcatalog
     You may need to set JAVA_HOME:
       export JAVA_HOME="$(/usr/libexec/java_home)"
     EOS
